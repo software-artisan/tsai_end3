@@ -27,7 +27,7 @@ Model description
 
 Shown below is the implementation of the model, along with the sizes at every layer. this class defines the CNN and the fully connected layers..
 
-```
+```python
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -60,18 +60,18 @@ class Net(nn.Module):
         # # input = 3x3x256 | kernel = (3x3x1024)x10 | output = 1x1x10 | RF=34x34
         # self.conv7 = nn.Conv2d(in_channels=16, out_channels=10, kernel_size=3)
 
-        # input = 794 | output = 120 
-        self.fc1 = nn.Linear(in_features=7*7*16 + 10, out_features=120)
-        # input = 120 | output = 60
-        self.fc2 = nn.Linear(in_features=120, out_features=60)
+        # input = 794 | output = 30 
+        self.fc1 = nn.Linear(in_features=7*7*16 + 10, out_features=30)
+        # input = 30 | output = 30
+        self.fc2 = nn.Linear(in_features=30, out_features=30)
 
         # this is the output layer for mnist
-        # input = 60 | output = 10
-        self.out_mnist = nn.Linear(in_features=60, out_features=10)
+        # input = 30 | output = 10
+        self.out_mnist = nn.Linear(in_features=30, out_features=10)
 
         # this is the output layer for the adder
-        # input=60 | output=19 (max sum of two digits=18)
-        self.out_adder = nn.Linear(in_features=60, out_features=19)
+        # input=30 | output=19 (max sum of two digits=18)
+        self.out_adder = nn.Linear(in_features=30, out_features=19)
 
     def forward(self, mnist, num):
         global once
@@ -172,12 +172,10 @@ Negative Log Likelihood loss function was chosen as the loss function since it i
 Training was done on a GPU
 
 ```python
-torch.__version__
-torch.cuda.get_device_name()
-torch.cuda.get_device_properties('cuda:0')
-
-_CudaDeviceProperties(name='Tesla P100-PCIE-16GB', major=6, minor=0, total_memory=16280MB, multi_processor_count=56)
+print(f"torch.__version__={torch.__version__}; torch.cuda.get_device_name()={torch.cuda.get_device_name()}; torch.cuda.get_device_properties('cuda:0')={torch.cuda.get_device_properties('cuda:0')}" )
 ```
+
+`torch.__version__=1.9.0+cu111; torch.cuda.get_device_name()=Tesla P100-PCIE-16GB; torch.cuda.get_device_properties('cuda:0')=_CudaDeviceProperties(name='Tesla P100-PCIE-16GB', major=6, minor=0, total_memory=16280MB, multi_processor_count=56)`
 
 ## 1.8. short training log
 
@@ -186,32 +184,34 @@ Training was done for 50 epochs.  Output shown below for the last 5 epochs
 .
 .
 .
+Epoch: 45
+Training phase: batch_id=59; total loss=0.7269266843795776; mnist loss=0.02640809491276741; adder loss=0.7005186080932617; epoch_mnist_correct=59492/60000; epoch_sum_correct=46704/60000: 100%|██████████| 60/60 [00:09<00:00,  6.60it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59492/60000   99.1533%; Average adder loss: 0.0007; adder Accuracy: 46704/60000   77.8400%
+Testing phase: total_test_loss=7299.730217933655;  total_mnist_loss=293.2921075820923; total_mnist_correct=9912/10000;  total_adder_loss=7006.4381103515625; total_adder_correct=8162/10000: 100%|██████████| 10/10 [00:01<00:00,  6.52it/s]
+Test set: Average mnist loss: 0.0293; mnist Accuracy: 9912/10000 (99.1200%); Average adder loss: 0.7006; adder Accuracy: 8162/10000 (81.6200%)
 Epoch: 46
-Training phase: batch_id=59; total loss=0.8265974521636963; mnist loss=0.029581133276224136; adder loss=0.7970163226127625; epoch_mnist_correct=59471/60000; epoch_sum_correct=42646/60000: 100%|██████████| 60/60 [00:08<00:00,  6.68it/s]
-Training set: Average mnist loss: 0.0000; mnist Accuracy: 59471/60000   99.1183%; adder Accuracy: 42646/60000   71.0767%
-Testing phase: total_test_loss=8419.704275131226; total_correct=9903/10000; total_sum_correct=7812/10000: 100%|██████████| 10/10 [00:01<00:00,  6.28it/s]
-Test set: Average loss: 0.0317, Accuracy: 9903/10000 (99%)
-
+Training phase: batch_id=59; total loss=0.6935956478118896; mnist loss=0.026198046281933784; adder loss=0.6673976182937622; epoch_mnist_correct=59496/60000; epoch_sum_correct=46876/60000: 100%|██████████| 60/60 [00:09<00:00,  6.32it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59496/60000   99.1600%; Average adder loss: 0.0007; adder Accuracy: 46876/60000   78.1267%
+Testing phase: total_test_loss=7977.943380355835;  total_mnist_loss=296.2183437347412; total_mnist_correct=9915/10000;  total_adder_loss=7681.725036621094; total_adder_correct=7440/10000: 100%|██████████| 10/10 [00:01<00:00,  6.32it/s]
+Test set: Average mnist loss: 0.0296; mnist Accuracy: 9915/10000 (99.1500%); Average adder loss: 0.7682; adder Accuracy: 7440/10000 (74.4000%)
 Epoch: 47
-Training phase: batch_id=59; total loss=0.8263429999351501; mnist loss=0.027625655755400658; adder loss=0.7987173199653625; epoch_mnist_correct=59486/60000; epoch_sum_correct=43884/60000: 100%|██████████| 60/60 [00:09<00:00,  6.58it/s]
-Training set: Average mnist loss: 0.0000; mnist Accuracy: 59486/60000   99.1433%; adder Accuracy: 43884/60000   73.1400%
-Testing phase: total_test_loss=8177.347946166992; total_correct=9913/10000; total_sum_correct=7809/10000: 100%|██████████| 10/10 [00:01<00:00,  6.62it/s]
-Test set: Average loss: 0.0302, Accuracy: 9913/10000 (99%)
-
+Training phase: batch_id=59; total loss=0.6970016360282898; mnist loss=0.0246108565479517; adder loss=0.6723907589912415; epoch_mnist_correct=59481/60000; epoch_sum_correct=47941/60000: 100%|██████████| 60/60 [00:09<00:00,  6.29it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59481/60000   99.1350%; Average adder loss: 0.0007; adder Accuracy: 47941/60000   79.9017%
+Testing phase: total_test_loss=6970.340476989746;  total_mnist_loss=305.96321868896484; total_mnist_correct=9915/10000;  total_adder_loss=6664.377258300781; total_adder_correct=8351/10000: 100%|██████████| 10/10 [00:01<00:00,  5.95it/s]
+Test set: Average mnist loss: 0.0306; mnist Accuracy: 9915/10000 (99.1500%); Average adder loss: 0.6664; adder Accuracy: 8351/10000 (83.5100%)
 Epoch: 48
-Training phase: batch_id=59; total loss=0.8106864094734192; mnist loss=0.024420911446213722; adder loss=0.78626549243927; epoch_mnist_correct=59510/60000; epoch_sum_correct=43809/60000: 100%|██████████| 60/60 [00:08<00:00,  6.72it/s]
-Training set: Average mnist loss: 0.0000; mnist Accuracy: 59510/60000   99.1833%; adder Accuracy: 43809/60000   73.0150%
-Testing phase: total_test_loss=8517.124522209167; total_correct=9910/10000; total_sum_correct=7240/10000: 100%|██████████| 10/10 [00:01<00:00,  6.64it/s]
-Test set: Average loss: 0.0304, Accuracy: 9910/10000 (99%)
-
+Training phase: batch_id=59; total loss=0.7443302273750305; mnist loss=0.019104812294244766; adder loss=0.7252253890037537; epoch_mnist_correct=59507/60000; epoch_sum_correct=48240/60000: 100%|██████████| 60/60 [00:09<00:00,  6.48it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59507/60000   99.1783%; Average adder loss: 0.0007; adder Accuracy: 48240/60000   80.4000%
+Testing phase: total_test_loss=7325.697885513306;  total_mnist_loss=285.5006809234619; total_mnist_correct=9918/10000;  total_adder_loss=7040.197204589844; total_adder_correct=7913/10000: 100%|██████████| 10/10 [00:01<00:00,  6.53it/s]
+Test set: Average mnist loss: 0.0286; mnist Accuracy: 9918/10000 (99.1800%); Average adder loss: 0.7040; adder Accuracy: 7913/10000 (79.1300%)
 Epoch: 49
-Training phase: batch_id=59; total loss=0.8316329121589661; mnist loss=0.019724559038877487; adder loss=0.8119083642959595; epoch_mnist_correct=59515/60000; epoch_sum_correct=46566/60000: 100%|██████████| 60/60 [00:08<00:00,  6.69it/s]
-Training set: Average mnist loss: 0.0000; mnist Accuracy: 59515/60000   99.1917%; adder Accuracy: 46566/60000   77.6100%
-Testing phase: total_test_loss=8539.1895236969; total_correct=9903/10000; total_sum_correct=6907/10000: 100%|██████████| 10/10 [00:01<00:00,  6.63it/s]
-Test set: Average loss: 0.0323, Accuracy: 9903/10000 (99%)
-
+Training phase: batch_id=59; total loss=0.6240031719207764; mnist loss=0.0273855309933424; adder loss=0.5966176390647888; epoch_mnist_correct=59515/60000; epoch_sum_correct=49791/60000: 100%|██████████| 60/60 [00:09<00:00,  6.13it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59515/60000   99.1917%; Average adder loss: 0.0006; adder Accuracy: 49791/60000   82.9850%
+Testing phase: total_test_loss=6392.253681182861;  total_mnist_loss=279.1161689758301; total_mnist_correct=9911/10000;  total_adder_loss=6113.137512207031; total_adder_correct=8473/10000: 100%|██████████| 10/10 [00:01<00:00,  5.71it/s]
+Test set: Average mnist loss: 0.0279; mnist Accuracy: 9911/10000 (99.1100%); Average adder loss: 0.6113; adder Accuracy: 8473/10000 (84.7300%)
 Epoch: 50
-Training phase: batch_id=59; total loss=0.8966447114944458; mnist loss=0.02803477644920349; adder loss=0.8686099052429199; epoch_mnist_correct=59511/60000; epoch_sum_correct=44550/60000: 100%|██████████| 60/60 [00:09<00:00,  6.63it/s]
-Training set: Average mnist loss: 0.0000; mnist Accuracy: 59511/60000   99.1850%; adder Accuracy: 44550/60000   74.2500%
-Testing phase: total_test_loss=8044.346004486084; total_correct=9899/10000; total_sum_correct=7603/10000: 100%|██████████| 10/10 [00:01<00:00,  6.68it/s]Test set: Average loss: 0.0338, Accuracy: 9899/10000 (99%)
+Training phase: batch_id=59; total loss=0.6561468839645386; mnist loss=0.027134407311677933; adder loss=0.6290124654769897; epoch_mnist_correct=59528/60000; epoch_sum_correct=49962/60000: 100%|██████████| 60/60 [00:08<00:00,  6.69it/s]
+Training set: Average mnist loss: 0.0000; mnist Accuracy: 59528/60000   99.2133%; Average adder loss: 0.0006; adder Accuracy: 49962/60000   83.2700%
+Testing phase: total_test_loss=6411.119770050049;  total_mnist_loss=297.4601631164551; total_mnist_correct=9915/10000;  total_adder_loss=6113.659606933594; total_adder_correct=8635/10000: 100%|██████████| 10/10 [00:01<00:00,  6.48it/s]
+Test set: Average mnist loss: 0.0297; mnist Accuracy: 9915/10000 (99.1500%); Average adder loss: 0.6114; adder Accuracy: 8635/10000 (86.3500%)
 ``` 
