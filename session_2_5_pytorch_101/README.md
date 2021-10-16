@@ -22,8 +22,8 @@ Model description
 - The digit to be added is encoded as one hot vector.  Since the digit ranges from 0 to 9, the size of the one hot vector is `1 x 10`: each element of the vector represents a digit from 0 to 9.
 - Both the one hot vector and the image vector are concatenated to create a `1x794` and this is fed to a fully connected layer FC1
 - There are 2 outputs from the fully connected network
-  - an output layer to predict MNIST digits.  The output size is 1x10 (for 10 digits)
-  - another output layer to represent the result of addition.  the output size is 1x19 (to represent numbers from 0 to 18)
+  - an output layer to predict MNIST digits.  The output size is `1x10` (for 10 digits)
+  - another output layer to represent the result of addition.  the output size is `1x19` (to represent numbers from 0 to 18)
 
 Shown below is the implementation of the model, along with the sizes at every layer. this class defines the CNN and the fully connected layers..
 
@@ -106,6 +106,7 @@ class Net(nn.Module):
 ```
 
 ## 1.2. data representation
+
 - The input image is a tensor of size `28x28x1`.  
 - The digit to be added is encoded as a one hot vector of size `1x10` to allow representation of digits from 0 to 9 (10 digits)
 - The output of the mnist predictor is 1x10 (to predict digits 0 to 9)
